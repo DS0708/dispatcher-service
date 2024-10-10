@@ -23,14 +23,32 @@ ext {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter'
+    //Spring Cloud Function
     implementation 'org.springframework.cloud:spring-cloud-function-context'
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    //일부 비즈니스 로직이 리액터를 사용해(Flux 사용) 구현되었기 때문에 리액터 테스트에 대한 테스트 의존성을 추가해야한다.
+    testImplementation 'io.projectreactor:reactor-test'
 }
 
 dependencyManagement {
     imports {
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+
+bootBuildImage {
+    builder = "docker.io/paketobuildpacks/builder-jammy-base"
+    imageName = "${project.name}"
+    environment = ["BP_JVM_VERSION": "17"]
+
+    docker {
+        publishRegistry {
+            username = project.findProperty("registryUsername")
+            password = project.findProperty("registryToken")
+            url = project.findProperty("registryUrl")
+        }
     }
 }
 
