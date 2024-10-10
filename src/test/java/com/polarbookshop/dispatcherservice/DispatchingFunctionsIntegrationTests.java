@@ -1,5 +1,6 @@
 package com.polarbookshop.dispatcherservice;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.function.context.FunctionCatalog;
@@ -25,6 +26,8 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 * 이때, 프레임워크는 작성한 구현만 제공되는 것이 아니라 유형 변환, 함수 합성과 같이 Spring Cloud Function이 제공하는 추가 기능도 가짐.
 * */
 @FunctionalSpringBootTest
+//외부 메시징 시스템과의 통합을 테스트하려고 하기 때문에 비활성화
+@Disabled("These tests are only necessary when using the functions alone (no bindings)")
 public class DispatchingFunctionsIntegrationTests {
 
     @Autowired

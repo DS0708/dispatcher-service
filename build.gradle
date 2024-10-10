@@ -22,14 +22,20 @@ ext {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter'
+    //implementation 'org.springframework.boot:spring-boot-starter'
     //Spring Cloud Function
-    implementation 'org.springframework.cloud:spring-cloud-function-context'
+    //implementation 'org.springframework.cloud:spring-cloud-function-context'
+
+    //Spring Cloud Stream의 RabbitMQ 바인더 의존성, "Spring Cloud Function" 와 "Spring Boot Starter"는 Spring Cloud Stream에 포함되어 있음.
+    implementation 'org.springframework.cloud:spring-cloud-stream-binder-rabbit'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+//    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     //일부 비즈니스 로직이 리액터를 사용해(Flux 사용) 구현되었기 때문에 리액터 테스트에 대한 테스트 의존성을 추가해야한다.
     testImplementation 'io.projectreactor:reactor-test'
+    //Spring Cloud Stream이 제공하는 테스트 바인더를 이용해 특정 기술(ex: RabbitMQ)과는 독립적으로 대상 바인더에 대한 올바른 설정 및 통합을 테스트.
+    testImplementation 'org.springframework.cloud:spring-cloud-stream-test-binder'
+
 }
 
 dependencyManagement {
@@ -54,4 +60,11 @@ bootBuildImage {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+//class-path에서 commons-logging 제외
+configurations {
+    all {
+        exclude group: 'commons-logging', module: 'commons-logging'
+    }
 }
